@@ -1,6 +1,5 @@
 import os
 import requests
-import py7zr
 from tqdm import tqdm
 import subprocess
 
@@ -25,27 +24,29 @@ def download_file(url, filename):
             bar.update(size)
 
 def extract_file(filename, path):
-    with py7zr.SevenZipFile(filename, 'r') as archive:
-        archive.extractall(path)
+    if not os.path.exists(path):
+        os.makedirs(path)
+    # dùng p7zip để giải nén thay cho py7zr
+    subprocess.run(["7z", "x", filename, f"-o{path}", "-y"], check=True)
 
 def run_sh(script, path):
     script_path = os.path.join(path, script)
     if os.path.exists(script_path):
         subprocess.call(["sh", script_path])
     else:
-        print(f"Không tìm thấy {script}")
+        print(f"❌ Không tìm thấy {script}")
 
 def main():
     ensure_storage_permission()
 
-    print("Đang tải game...")
+    print("📥 Đang tải game...")
     download_file(url, download_path)
 
-    print("Đang giải nén game...")
+    print("📂 Đang giải nén game...")
     extract_file(download_path, extract_path)
 
     print(f"\n✅ Game đã được giải nén tại: {extract_path}")
-    print("👉 Vui lòng mở file htht.apk trong thư mục này để cài đặt game.\n")
+    print("👉 Vui lòng mở file htht.apk trong thư mục này để tự cài đặt game.\n")
 
     input("📌 Sau khi bạn cài xong htht.apk, nhấn Enter để tiếp tục...")
 
