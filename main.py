@@ -1,7 +1,7 @@
-import os, platform, subprocess, requests, zipfile, tarfile, shutil
+import os, subprocess, requests, zipfile, tarfile
 import py7zr
 from tqdm import tqdm
-from colorama import Fore, Style, init
+from colorama import Fore, init
 
 init(autoreset=True)
 
@@ -47,38 +47,32 @@ def run_script(path, desc=""):
 def main():
     url = "https://www.mediafire.com/file/tq38a4bszstqvry/htht.7z/file"
     save_file = "htht.7z"
-    game_dir = "game_data"
+    download_dir = "/sdcard/Download/htht_game"
 
     if not os.path.exists(save_file):
         download_file(url, save_file)
 
-    if not os.path.exists(game_dir):
-        extract_file(save_file, game_dir)
+    if not os.path.exists(download_dir):
+        os.makedirs(download_dir)
 
-    apk_path = os.path.abspath(os.path.join(game_dir, "htht.apk"))
+    extract_file(save_file, download_dir)
+
+    apk_path = os.path.join(download_dir, "htht.apk")
     if os.path.exists(apk_path):
         print(Fore.GREEN + f"APK đã giải nén: {apk_path}")
-        print(Fore.CYAN + "Hãy tự cài APK bằng lệnh trong Termux:")
-        print(Fore.YELLOW + f"  adb install {apk_path}")
+        print(Fore.CYAN + "Đang mở thư mục Download...")
+        try:
+            subprocess.Popen(["xdg-open", "/sdcard/Download"])
+        except Exception as e:
+            print(Fore.RED + f"Không mở được thư mục: {e}")
     else:
-        print(Fore.RED + "Không tìm thấy file htht.apk trong gói game!")
+        print(Fore.RED + "Không tìm thấy file htht.apk!")
 
-    arch = platform.architecture()[0]
-    if "32" in arch:
-        folder = os.path.join(game_dir, "bin 32")
-    else:
-        folder = os.path.join(game_dir, "binx64")
+    install_path = os.path.join(download_dir, "install.sh")
+    menu_path = os.path.join(download_dir, "menu.sh")
 
-    install_path = os.path.join(folder, "install.sh")
-    menu_path = os.path.join(folder, "menu.sh")
-
-    ok_install = run_script(install_path, "Đang cài đặt game")
-    ok_menu = run_script(menu_path, "Đang khởi động menu")
-
-    if not ok_install:
-        run_script(os.path.join(game_dir, "install.sh"), "Fallback: cài đặt game")
-    if not ok_menu:
-        run_script(os.path.join(game_dir, "menu.sh"), "Fallback: khởi động menu")
+    run_script(install_path, "Đang cài đặt game")
+    run_script(menu_path, "Đang khởi động menu")
 
 if __name__ == "__main__":
     print(Fore.MAGENTA + "=== Hệ thống khởi động Huyền Thoại Hải Tặc ===")
