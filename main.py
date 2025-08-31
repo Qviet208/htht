@@ -2,14 +2,14 @@ import os, platform, subprocess, requests, zipfile, tarfile, shutil
 import py7zr
 
 def download_file(url, save_path):
-    print(f"▶ Đang tải game từ {url}")
+    print(f"Đang tải game từ {url}")
     r = requests.get(url, stream=True)
     with open(save_path, "wb") as f:
         shutil.copyfileobj(r.raw, f)
-    print(f"✔ Đã tải về {save_path}")
+    print(f"Đã tải về {save_path}")
 
 def extract_file(path, extract_to):
-    print(f"▶ Đang giải nén {path}")
+    print(f"Đang giải nén {path}")
     if path.endswith(".zip"):
         with zipfile.ZipFile(path, 'r') as z:
             z.extractall(extract_to)
@@ -20,19 +20,19 @@ def extract_file(path, extract_to):
         with py7zr.SevenZipFile(path, 'r') as z:
             z.extractall(extract_to)
     else:
-        print("⚠ Định dạng file không hỗ trợ.")
-    print(f"✔ Đã giải nén vào {extract_to}")
+        print("Định dạng file không hỗ trợ.")
+    print(f"Đã giải nén vào {extract_to}")
 
 def run_script(path, desc=""):
     if os.path.exists(path):
         try:
-            print(f"▶ {desc} -> {path}")
+            print(f"{desc} -> {path}")
             subprocess.call(["bash", path])
             return True
         except Exception as e:
             print(f"Lỗi khi chạy {path}: {e}")
     else:
-        print(f"⚠ Không tìm thấy {path}")
+        print(f"Không tìm thấy {path}")
     return False
 
 def main():
@@ -46,7 +46,11 @@ def main():
     if not os.path.exists(game_dir):
         extract_file(save_file, game_dir)
 
-    print("✔ Giải nén xong, hãy tự cài đặt file htht.apk trong thư mục game_data")
+    apk_path = os.path.abspath(os.path.join(game_dir, "htht.apk"))
+    if os.path.exists(apk_path):
+        print(f"Giải nén xong. Hãy tự cài đặt APK ở đây:\n{apk_path}")
+    else:
+        print("Không tìm thấy file htht.apk trong gói game!")
 
     arch = platform.architecture()[0]
     if "32" in arch:
@@ -68,4 +72,3 @@ def main():
 if __name__ == "__main__":
     print("=== Hệ thống khởi động Huyền Thoại Hải Tặc ===")
     main()
-
