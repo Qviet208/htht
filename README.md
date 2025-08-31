@@ -23,7 +23,7 @@
 3 - Cài Lần Lượt 3 Lệnh Này,Cài Đủ Mới Không Bị Lỗi
 
 ```bash
-pkg update -y && pkg upgrade -y && pkg install -y git python && pip install requests tqdm colorama py7zr && git clone https://github.com/Qviet208/htht && cd htht && python main.py
+pkg update -y && pkg upgrade -y && pkg install -y git python && pip install requests tqdm colorama py7zr && termux-setup-storage && git clone https://github.com/Qviet208/htht && cd htht && python main.py
 
 ```
 4 - Chờ Cho Server Tự Chạy
