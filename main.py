@@ -18,27 +18,16 @@ def ensure_storage_permission():
 
 def get_direct_mediafire(url):
     """
-    Parse HTML Mediafire để lấy link download trực tiếp
+    Parse HTML trang Mediafire để lấy link direct từ nút download
     """
     print("🔍 Đang phân tích link Mediafire...")
     resp = requests.get(url)
     soup = BeautifulSoup(resp.text, "html.parser")
-
-    # Ưu tiên nút có id downloadButton
     button = soup.find("a", {"id": "downloadButton"})
     if button and "href" in button.attrs:
         return button["href"]
-
-    # Nếu id không có, tìm link có aria-label hoặc chữ "Download"
-    candidates = soup.find_all("a")
-    for a in candidates:
-        if "href" in a.attrs and (
-            "download" in (a.get("aria-label") or "").lower()
-            or "download" in a.text.lower()
-        ):
-            return a["href"]
-
-    raise Exception("❌ Không tìm thấy link download trong Mediafire (có thể link bị sai hoặc Mediafire đổi giao diện)")
+    else:
+        raise Exception("❌ Không tìm thấy link download trong Mediafire")
 
 def download_file(url, filename):
     response = requests.get(url, stream=True)
@@ -51,7 +40,6 @@ def download_file(url, filename):
             bar.update(size)
 
 def extract_file(filename, path):
-    # Dùng 7z CLI thay vì py7zr để tránh lỗi build
     os.makedirs(path, exist_ok=True)
     subprocess.run(["7z", "x", filename, f"-o{path}", "-y"], check=True)
 
@@ -66,12 +54,13 @@ def run_sh(script, path):
 def main():
     ensure_storage_permission()
 
-    print("🔍 Lấy link tải trực tiếp từ Mediafire...")
-    direct_url = get_direct_mediafire(url)
-    print("✅ Link direct:", direct_url)
-
-    print("⬇️ Đang tải game...")
-    download_file(direct_url, download_path)
+    if not os.path.exists(download_path):
+        print("📂 File chưa có sẵn, tiến hành tải từ Mediafire...")
+        direct_url = get_direct_mediafire(url)
+        print("✅ Link direct:", direct_url)
+        download_file(direct_url, download_path)
+    else:
+        print("✅ Đã tìm thấy file htht.7z, bỏ qua bước tải.")
 
     print("📦 Đang giải nén game...")
     extract_file(download_path, extract_path)
