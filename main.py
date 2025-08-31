@@ -2,9 +2,10 @@ import os
 import requests
 import subprocess
 from tqdm import tqdm
+from bs4 import BeautifulSoup
 
-# Link Mediafire (link public dạng /file/xxx/file chứ không phải direct)
-url = "https://download1478.mediafire.com/rdtmd023udygbjDOL3FpCN5hZNEK9WLmh6Ra432mO14R3g-ldvdrcazDMchZ8fC14yHHILJZchlyralnyaBGT_sQ3Izi4219lxeYdEA7gBHgPGRP1XPzfp-a9kZ_p5aB0JC73tqJRoal3tdG9xHv3AnRFG6KDjqMLNmcFsDgvFM_Wg/tq38a4bszstqvry/htht.7z"
+# Link Mediafire (link gốc, KHÔNG phải direct)
+url = "https://www.mediafire.com/file/tq38a4bszstqvry/htht.7z/file"
 
 download_path = "/sdcard/Download/htht.7z"
 extract_path = "/sdcard/Download/htht_game"
@@ -17,12 +18,16 @@ def ensure_storage_permission():
 
 def get_direct_mediafire(url):
     """
-    Lấy link tải trực tiếp từ Mediafire bằng cách follow redirect
+    Parse HTML trang Mediafire để lấy link direct từ nút download
     """
-    session = requests.Session()
-    resp = session.get(url, allow_redirects=True)
-    # Mediafire thường trả về link thật trong resp.url
-    return resp.url
+    print("🔍 Đang phân tích link Mediafire...")
+    resp = requests.get(url)
+    soup = BeautifulSoup(resp.text, "html.parser")
+    button = soup.find("a", {"id": "downloadButton"})
+    if button and "href" in button.attrs:
+        return button["href"]
+    else:
+        raise Exception("❌ Không tìm thấy link download trong Mediafire")
 
 def download_file(url, filename):
     response = requests.get(url, stream=True)
@@ -42,6 +47,7 @@ def extract_file(filename, path):
 def run_sh(script, path):
     script_path = os.path.join(path, script)
     if os.path.exists(script_path):
+        subprocess.call(["chmod", "+x", script_path])
         subprocess.call(["sh", script_path])
     else:
         print(f"⚠️ Không tìm thấy {script}")
