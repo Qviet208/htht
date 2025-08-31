@@ -47,6 +47,8 @@ def main():
     print(f"\n✅ Game đã được giải nén tại: {extract_path}")
     print("👉 Vui lòng mở file htht.apk trong thư mục này để cài đặt game.\n")
 
+    input("📌 Sau khi bạn cài xong htht.apk, nhấn Enter để tiếp tục...")
+
     run_sh("install.sh", extract_path)
     run_sh("menu.sh", extract_path)
 
