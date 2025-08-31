@@ -1,64 +1,54 @@
 import os
 import requests
 import py7zr
-import subprocess
 from tqdm import tqdm
+import subprocess
 
-DOWNLOAD_DIR = "/sdcard/Download"
-GAME_DIR = os.path.join(DOWNLOAD_DIR, "htht_game")
-ARCHIVE_PATH = os.path.join(DOWNLOAD_DIR, "htht.7z")
+url = "https://www.mediafire.com/file/tq38a4bszstqvry/htht.7z/file"
+download_path = "/sdcard/Download/htht.7z"
+extract_path = "/sdcard/Download/htht_game"
 
-# Link tải game (bạn có thể đổi tuỳ ý)
-GAME_URL = "https://www.mediafire.com/file/tq38a4bszstqvry/htht.7z/file"
+def ensure_storage_permission():
+    try:
+        subprocess.call(["termux-setup-storage"])
+    except FileNotFoundError:
+        print("⚠️ Lệnh termux-setup-storage không khả dụng ngoài Termux.")
 
-def download_file(url, dest):
+def download_file(url, filename):
     response = requests.get(url, stream=True)
     total = int(response.headers.get('content-length', 0))
-    with open(dest, 'wb') as file, tqdm(
-        desc="Đang tải game",
-        total=total,
-        unit='B',
-        unit_scale=True,
-        unit_divisor=1024
+    with open(filename, 'wb') as file, tqdm(
+        desc=filename, total=total, unit='iB', unit_scale=True, unit_divisor=1024
     ) as bar:
         for data in response.iter_content(chunk_size=1024):
             size = file.write(data)
             bar.update(size)
 
-def extract_archive(archive_path, extract_to):
-    if not os.path.exists(extract_to):
-        os.makedirs(extract_to)
-    with py7zr.SevenZipFile(archive_path, mode='r') as archive:
-        archive.extractall(path=extract_to)
+def extract_file(filename, path):
+    with py7zr.SevenZipFile(filename, 'r') as archive:
+        archive.extractall(path)
 
-def run_script(script_name):
-    script_path = os.path.join(GAME_DIR, script_name)
+def run_sh(script, path):
+    script_path = os.path.join(path, script)
     if os.path.exists(script_path):
-        subprocess.call(["bash", script_path])
+        subprocess.call(["sh", script_path])
     else:
-        print(f"Không tìm thấy {script_name}")
+        print(f"Không tìm thấy {script}")
 
 def main():
-    print("=== Huyền Thoại Hải Tặc ===")
+    ensure_storage_permission()
 
-    # Bước 1: tải game
-    if not os.path.exists(ARCHIVE_PATH):
-        print("Bắt đầu tải game...")
-        download_file(GAME_URL, ARCHIVE_PATH)
-    else:
-        print("Đã có file game, bỏ qua bước tải.")
+    print("Đang tải game...")
+    download_file(url, download_path)
 
-    # Bước 2: giải nén
     print("Đang giải nén game...")
-    extract_archive(ARCHIVE_PATH, GAME_DIR)
+    extract_file(download_path, extract_path)
 
-    # Bước 3: chạy install.sh
-    print("Chạy install.sh...")
-    run_script("install.sh")
+    print(f"\n✅ Game đã được giải nén tại: {extract_path}")
+    print("👉 Vui lòng mở file htht.apk trong thư mục này để cài đặt game.\n")
 
-    # Bước 4: chạy menu.sh
-    print("Chạy menu.sh...")
-    run_script("menu.sh")
+    run_sh("install.sh", extract_path)
+    run_sh("menu.sh", extract_path)
 
 if __name__ == "__main__":
     main()
