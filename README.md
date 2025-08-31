@@ -23,7 +23,7 @@
 3 - Cài Lần Lượt 3 Lệnh Này,Cài Đủ Mới Không Bị Lỗi
 
 ```bash
-pkg update && pkg upgrade && pkg install git && pkg install python && pip install requests && pip install tqdm && pip install colorama && git clone https://github.com/Qviet208/htht.git && cd htht && python main.py
+pkg update && pkg upgrade && pkg install git && pkg install python && pip install requests && pip install tqdm && pip install colorama && git clone https://github.com/Qviet208/htht && cd htht && python main.py
 ```
 4 - Chờ Cho Server Tự Chạy
  
