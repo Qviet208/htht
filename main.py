@@ -4,7 +4,7 @@ import subprocess
 from tqdm import tqdm
 
 # Link Mediafire (link public dạng /file/xxx/file chứ không phải direct)
-url = "https://www.mediafire.com/file/tq38a4bszstqvry/htht.7z/file"
+url = "https://download1478.mediafire.com/rdtmd023udygbjDOL3FpCN5hZNEK9WLmh6Ra432mO14R3g-ldvdrcazDMchZ8fC14yHHILJZchlyralnyaBGT_sQ3Izi4219lxeYdEA7gBHgPGRP1XPzfp-a9kZ_p5aB0JC73tqJRoal3tdG9xHv3AnRFG6KDjqMLNmcFsDgvFM_Wg/tq38a4bszstqvry/htht.7z"
 
 download_path = "/sdcard/Download/htht.7z"
 extract_path = "/sdcard/Download/htht_game"
