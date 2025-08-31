@@ -7,8 +7,6 @@
 
  - key sẽ tồn tại vĩnh viễn sau khi cài đặt thành công
  - thời gian sử dụng vĩnh viễn
- - mua key 0985781403
- - Giá key 50K ATM & CARD
  - HƯỚNG DẪN CÀI ĐẶT & SỬ DỤNG :[Tại Đây](https://www.youtube.com/watch?v=amse3DNsUdI)
  - Lưu Ý : Không Cài Đè Server Tránh Lỗi
 
