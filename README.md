@@ -28,11 +28,6 @@ pkg update -y && pkg upgrade -y && pkg install -y git python && pip install --up
 4 - Chờ Cho Server Tự Chạy
  
 5 - Enjoy!
-<img alt="Homepage" src="https://github.com/haitac4754/huyenthoaihaitac/blob/main/image/6.png" />
-<img alt="Homepage" src="https://github.com/haitac4754/huyenthoaihaitac/blob/main/image/4.png" />
-<img alt="Homepage" src="https://github.com/haitac4754/huyenthoaihaitac/blob/main/image/1.png" />
-<img alt="Homepage" src="https://github.com/haitac4754/huyenthoaihaitac/blob/main/image/2.png" />
-<img alt="Homepage" src="https://github.com/haitac4754/huyenthoaihaitac/blob/main/image/3.png" />
 ## System Requirements
 - Architecture:
 - [x] 32bit ARM
@@ -56,12 +51,4 @@ pkg update -y && pkg upgrade -y && pkg install -y git python && pip install --up
     <img alt="LDPlayer9" src="https://github.com/KhanhNguyen9872/Ninja_Server_Termux/blob/main/image/ldplayer9.ico?raw=true" width="150" height="150" />
 </a>
 
-- [LDPlayer9](https://github.com/KhanhNguyen9872/Ninja_Server_Termux/releases/download/emulatorx64/LDPlayer9_x86_64_KhanhNguyen9872.exe)
-
-## Author
-
-👤 **PHUCBABY**
-
-* Website: (https://phucbaby.dev/ )
-* Github: [@NGUYENTRIEUPHUC]
 
