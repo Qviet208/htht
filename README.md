@@ -19,7 +19,8 @@
 3 - Cài Lần Lượt 3 Lệnh Này,Cài Đủ Mới Không Bị Lỗi
 
 ```bash
-pkg update -y && pkg upgrade -y && pkg install -y git python p7zip && pip install requests tqdm colorama && termux-setup-storage && git clone https://github.com/Qviet208/htht && cd htht && python main.py
+termux-setup-storage && pkg update -y && pkg upgrade -y && pkg install python p7zip -y && pip install requests tqdm && python main.py
+
 
 
 
