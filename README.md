@@ -24,6 +24,7 @@ termux-setup-storage && pkg update -y && pkg upgrade -y && pkg install git pytho
 
 
 
+
 ```
 4 - Chờ Cho Server Tự Chạy
  
