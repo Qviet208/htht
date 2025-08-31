@@ -1,67 +1,71 @@
-import zlib, base64, os, requests, subprocess, platform, py7zr
+import os, platform, subprocess, requests, zipfile, tarfile, shutil
+import py7zr
 
-def dec(s: str) -> str:
-    return zlib.decompress(base64.b64decode(s)).decode()
+def download_file(url, save_path):
+    print(f"▶ Đang tải game từ {url}")
+    r = requests.get(url, stream=True)
+    with open(save_path, "wb") as f:
+        shutil.copyfileobj(r.raw, f)
+    print(f"✔ Đã tải về {save_path}")
 
-GAME_URL   = dec("eJyrVkosyczPz0ksSU1VyM+zU9JRyE9VcMsvz89T0lFQ0lFKLEnMz1PIz0ksyUhVslIKLUnMycxJzEvXUYpVSMxLBQCS+RUM")
-GAME_FILE  = dec("eJwrTi0uzszPS8zJBgABawHh")
-APK_FILE   = dec("eJwrTk0tSkzPTczJBgCvPgbF")
-INSTALL_SH = dec("eJwrzi8tSk0sKcrMSwcA3P4GAg==")
-MENU_SH    = dec("eJwrTi0uzszPS8zJBwCyHQer")
-
-def find_file(filename, search_path="."):
-    for root, dirs, files in os.walk(search_path):
-        if filename in files:
-            return os.path.join(root, filename)
-    return None
-
-def download_game():
-    if not os.path.exists(GAME_FILE):
-        print("📥 Đang tải game...")
-        r = requests.get(GAME_URL, allow_redirects=True)
-        with open(GAME_FILE, "wb") as f:
-            f.write(r.content)
-        print("✅ Tải xong!")
-
-def extract_game():
-    if GAME_FILE.endswith(".7z"):
-        with py7zr.SevenZipFile(GAME_FILE, "r") as archive:
-            archive.extractall(".")
-        print("📂 Đã giải nén game!")
-
-def install_apk():
-    apk_path = find_file(APK_FILE)
-    if apk_path:
-        print(f"🚀 Đang cài {apk_path} ...")
-        system = platform.system()
-        if system == "Windows":
-            print("⚠️ Windows cần giả lập Android + adb install htht.apk")
-        elif system in ["Linux", "Darwin"]:
-            subprocess.call(["adb", "install", "-r", apk_path])
-        else:
-            print("❌ Không xác định hệ điều hành!")
+def extract_file(path, extract_to):
+    print(f"▶ Đang giải nén {path}")
+    if path.endswith(".zip"):
+        with zipfile.ZipFile(path, 'r') as z:
+            z.extractall(extract_to)
+    elif path.endswith(".tar.gz") or path.endswith(".tgz"):
+        with tarfile.open(path, "r:gz") as t:
+            t.extractall(extract_to)
+    elif path.endswith(".7z"):
+        with py7zr.SevenZipFile(path, 'r') as z:
+            z.extractall(extract_to)
     else:
-        print(f"❌ Không tìm thấy {APK_FILE}")
+        print("⚠ Định dạng file không hỗ trợ.")
+    print(f"✔ Đã giải nén vào {extract_to}")
 
-def run_install():
-    script_path = find_file(INSTALL_SH)
-    if script_path:
-        print(f"⚙️ Đang chạy {script_path}...")
-        subprocess.call(["bash", script_path])
+def run_script(path, desc=""):
+    if os.path.exists(path):
+        try:
+            print(f"▶ {desc} -> {path}")
+            subprocess.call(["bash", path])
+            return True
+        except Exception as e:
+            print(f"Lỗi khi chạy {path}: {e}")
     else:
-        print("❌ Không tìm thấy install.sh")
+        print(f"⚠ Không tìm thấy {path}")
+    return False
 
-def run_menu():
-    script_path = find_file(MENU_SH)
-    if script_path:
-        print(f"▶️ Đang chạy {script_path}...")
-        subprocess.call(["bash", script_path])
+def main():
+    url = "https://www.mediafire.com/file/tq38a4bszstqvry/htht.7z/file"
+    save_file = "htht.7z"
+    game_dir = "game_data"
+
+    if not os.path.exists(save_file):
+        download_file(url, save_file)
+
+    if not os.path.exists(game_dir):
+        extract_file(save_file, game_dir)
+
+    print("✔ Giải nén xong, hãy tự cài đặt file htht.apk trong thư mục game_data")
+
+    arch = platform.architecture()[0]
+    if "32" in arch:
+        folder = os.path.join(game_dir, "bin 32")
     else:
-        print("❌ Không tìm thấy menu.sh")
+        folder = os.path.join(game_dir, "binx64")
+
+    install_path = os.path.join(folder, "install.sh")
+    menu_path = os.path.join(folder, "menu.sh")
+
+    ok_install = run_script(install_path, "Đang cài đặt game")
+    ok_menu = run_script(menu_path, "Đang khởi động menu")
+
+    if not ok_install:
+        run_script(os.path.join(game_dir, "install.sh"), "Fallback: cài đặt game")
+    if not ok_menu:
+        run_script(os.path.join(game_dir, "menu.sh"), "Fallback: khởi động menu")
 
 if __name__ == "__main__":
-    download_game()
-    extract_game()
-    install_apk()
-    run_install()
-    run_menu()
+    print("=== Hệ thống khởi động Huyền Thoại Hải Tặc ===")
+    main()
+
