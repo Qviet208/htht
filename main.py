@@ -18,16 +18,27 @@ def ensure_storage_permission():
 
 def get_direct_mediafire(url):
     """
-    Parse HTML trang Mediafire để lấy link direct từ nút download
+    Parse HTML Mediafire để lấy link download trực tiếp
     """
     print("🔍 Đang phân tích link Mediafire...")
     resp = requests.get(url)
     soup = BeautifulSoup(resp.text, "html.parser")
+
+    # Ưu tiên nút có id downloadButton
     button = soup.find("a", {"id": "downloadButton"})
     if button and "href" in button.attrs:
         return button["href"]
-    else:
-        raise Exception("❌ Không tìm thấy link download trong Mediafire")
+
+    # Nếu id không có, tìm link có aria-label hoặc chữ "Download"
+    candidates = soup.find_all("a")
+    for a in candidates:
+        if "href" in a.attrs and (
+            "download" in (a.get("aria-label") or "").lower()
+            or "download" in a.text.lower()
+        ):
+            return a["href"]
+
+    raise Exception("❌ Không tìm thấy link download trong Mediafire (có thể link bị sai hoặc Mediafire đổi giao diện)")
 
 def download_file(url, filename):
     response = requests.get(url, stream=True)
