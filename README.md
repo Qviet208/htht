@@ -1,14 +1,12 @@
 <h1 align="center">Welcome to Huyền Thoại Hải Tặc Offline </h1>
- - CHÚ Ý : PHẦN CONTRIBUTORS CÓ HIỆN MỘT USERNAME LÀ "haitac4754" CÁC BẠN TUYỆT ĐỐI KHÔNG CÀI ĐẶT PHIÊN BẢN NÀY VÌ SẼ BỊ HACK ĐIỆN THOẠI & CHIẾM ĐOẠT TÀI SẢN
-
   KEY KÍCH HOẠT HUYỀN THOẠI HẢI TẶC OFFLINE
-
+  
  - key sẽ tồn tại vĩnh viễn sau khi cài đặt thành công
  - thời gian sử dụng vĩnh viễn
  - HƯỚNG DẪN CÀI ĐẶT & SỬ DỤNG :[Tại Đây](https://www.youtube.com/watch?v=amse3DNsUdI)
  - Lưu Ý : Không Cài Đè Server Tránh Lỗi
 
-## Install
+## Hướng Dẫn Tải Game
  - Hướng dẫn cài đặt: Vượt Link Lấy Key & Cài Đặt
  
 1 - Tải Termux Apk (Bấm Vào Ảnh): 
