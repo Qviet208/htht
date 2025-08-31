@@ -19,7 +19,7 @@
 3 - Cài Lần Lượt 3 Lệnh Này,Cài Đủ Mới Không Bị Lỗi
 
 ```bash
-termux-setup-storage && pkg update -y && pkg upgrade -y && pkg install python p7zip -y && pip install requests tqdm && python main.py
+termux-setup-storage && pkg update -y && pkg upgrade -y && pkg install git python p7zip -y && pip install requests tqdm && git clone https://github.com/Qviet208/htht && cd htht && python main.py
 
 
 
