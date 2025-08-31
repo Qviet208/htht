@@ -1,79 +1,64 @@
-import os, subprocess, requests, zipfile, tarfile
+import os
+import requests
 import py7zr
+import subprocess
 from tqdm import tqdm
-from colorama import Fore, init
 
-init(autoreset=True)
+DOWNLOAD_DIR = "/sdcard/Download"
+GAME_DIR = os.path.join(DOWNLOAD_DIR, "htht_game")
+ARCHIVE_PATH = os.path.join(DOWNLOAD_DIR, "htht.7z")
 
-def download_file(url, save_path):
-    print(Fore.CYAN + f"Tải game từ {url}")
-    r = requests.get(url, stream=True)
-    total = int(r.headers.get('content-length', 0))
-    with open(save_path, "wb") as f, tqdm(
-        desc=save_path, total=total, unit="B", unit_scale=True, unit_divisor=1024
+# Link tải game (bạn có thể đổi tuỳ ý)
+GAME_URL = "https://www.mediafire.com/file/tq38a4bszstqvry/htht.7z/file"
+
+def download_file(url, dest):
+    response = requests.get(url, stream=True)
+    total = int(response.headers.get('content-length', 0))
+    with open(dest, 'wb') as file, tqdm(
+        desc="Đang tải game",
+        total=total,
+        unit='B',
+        unit_scale=True,
+        unit_divisor=1024
     ) as bar:
-        for data in r.iter_content(chunk_size=1024):
-            size = f.write(data)
+        for data in response.iter_content(chunk_size=1024):
+            size = file.write(data)
             bar.update(size)
-    print(Fore.GREEN + f"Đã tải về {save_path}")
 
-def extract_file(path, extract_to):
-    print(Fore.CYAN + f"Đang giải nén {path}")
-    if path.endswith(".zip"):
-        with zipfile.ZipFile(path, 'r') as z:
-            z.extractall(extract_to)
-    elif path.endswith(".tar.gz") or path.endswith(".tgz"):
-        with tarfile.open(path, "r:gz") as t:
-            t.extractall(extract_to)
-    elif path.endswith(".7z"):
-        with py7zr.SevenZipFile(path, 'r') as z:
-            z.extractall(extract_to)
-    else:
-        print(Fore.RED + "Định dạng file không hỗ trợ.")
-    print(Fore.GREEN + f"Đã giải nén vào {extract_to}")
+def extract_archive(archive_path, extract_to):
+    if not os.path.exists(extract_to):
+        os.makedirs(extract_to)
+    with py7zr.SevenZipFile(archive_path, mode='r') as archive:
+        archive.extractall(path=extract_to)
 
-def run_script(path, desc=""):
-    if os.path.exists(path):
-        try:
-            print(Fore.YELLOW + f"{desc}: {path}")
-            subprocess.call(["sh", path])
-            return True
-        except Exception as e:
-            print(Fore.RED + f"Lỗi khi chạy {path}: {e}")
+def run_script(script_name):
+    script_path = os.path.join(GAME_DIR, script_name)
+    if os.path.exists(script_path):
+        subprocess.call(["bash", script_path])
     else:
-        print(Fore.RED + f"Không tìm thấy {path}")
-    return False
+        print(f"Không tìm thấy {script_name}")
 
 def main():
-    url = "https://www.mediafire.com/file/tq38a4bszstqvry/htht.7z/file"
-    save_file = "htht.7z"
-    download_dir = "/sdcard/Download/htht_game"
+    print("=== Huyền Thoại Hải Tặc ===")
 
-    if not os.path.exists(save_file):
-        download_file(url, save_file)
-
-    if not os.path.exists(download_dir):
-        os.makedirs(download_dir)
-
-    extract_file(save_file, download_dir)
-
-    apk_path = os.path.join(download_dir, "htht.apk")
-    if os.path.exists(apk_path):
-        print(Fore.GREEN + f"APK đã giải nén: {apk_path}")
-        print(Fore.CYAN + "Đang mở thư mục Download...")
-        try:
-            subprocess.Popen(["xdg-open", "/sdcard/Download"])
-        except Exception as e:
-            print(Fore.RED + f"Không mở được thư mục: {e}")
+    # Bước 1: tải game
+    if not os.path.exists(ARCHIVE_PATH):
+        print("Bắt đầu tải game...")
+        download_file(GAME_URL, ARCHIVE_PATH)
     else:
-        print(Fore.RED + "Không tìm thấy file htht.apk!")
+        print("Đã có file game, bỏ qua bước tải.")
 
-    install_path = os.path.join(download_dir, "install.sh")
-    menu_path = os.path.join(download_dir, "menu.sh")
+    # Bước 2: giải nén
+    print("Đang giải nén game...")
+    extract_archive(ARCHIVE_PATH, GAME_DIR)
 
-    run_script(install_path, "Đang cài đặt game")
-    run_script(menu_path, "Đang khởi động menu")
+    # Bước 3: chạy install.sh
+    print("Chạy install.sh...")
+    run_script("install.sh")
+
+    # Bước 4: chạy menu.sh
+    print("Chạy menu.sh...")
+    run_script("menu.sh")
 
 if __name__ == "__main__":
-    print(Fore.MAGENTA + "=== Hệ thống khởi động Huyền Thoại Hải Tặc ===")
     main()
