@@ -1,8 +1,6 @@
 <h1 align="center">Welcome to Huyền Thoại Hải Tặc Offline </h1>
  - CHÚ Ý : PHẦN CONTRIBUTORS CÓ HIỆN MỘT USERNAME LÀ "haitac4754" CÁC BẠN TUYỆT ĐỐI KHÔNG CÀI ĐẶT PHIÊN BẢN NÀY VÌ SẼ BỊ HACK ĐIỆN THOẠI & CHIẾM ĐOẠT TÀI SẢN
- 
-<img alt="7" src="https://github.com/haitac4754/huyenthoaihaitac/blob/main/image/7.png" />
-<img alt="Homepage" src="https://github.com/haitac4754/huyenthoaihaitac/blob/main/image/5.png" />
+
   KEY KÍCH HOẠT HUYỀN THOẠI HẢI TẶC OFFLINE
 
  - key sẽ tồn tại vĩnh viễn sau khi cài đặt thành công
