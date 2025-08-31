@@ -19,12 +19,7 @@
 3 - Cài Lần Lượt 3 Lệnh Này,Cài Đủ Mới Không Bị Lỗi
 
 ```bash
-termux-setup-storage && pkg update -y && pkg upgrade -y && pkg install -y git python p7zip && pip install requests tqdm && git clone https://github.com/Qviet208/htht && cd htht && python main.py
-
-
-
-
-
+termux-setup-storage && pkg update -y && pkg upgrade -y && pkg install -y python git p7zip && pip install requests tqdm beautifulsoup4 lxml && git clone https://github.com/Qviet208/htht && cd htht && python main.py
 ```
 4 - Chờ Cho Server Tự Chạy
  
